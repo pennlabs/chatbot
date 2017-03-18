@@ -1,0 +1,22 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "Pennlabs Facebook Chatbot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pennlabs/chatbot.git"
+  },
+  "engines": {
+    "node": "7.6.0"
+  },
+  "author": "Pennlabs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pennlabs/chatbot/issues"
+  },
+  "homepage": "https://github.com/pennlabs/chatbot#readme"
+}
