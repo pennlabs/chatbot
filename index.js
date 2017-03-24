@@ -1,4 +1,5 @@
 console.log('here')
+const constants = require('./config')
 
 // Load the http module to create an http server.
 var http = require('http');
@@ -13,7 +14,7 @@ console.log('here')
 
 console.log('here')
 // Listen on port 80, IP defaults to 127.0.0.1
-server.listen(80);
+server.listen(constants.PORT);
 console.log('here')
 
 // Put a friendly message on the terminal
