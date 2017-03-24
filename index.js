@@ -2,10 +2,8 @@ const constants = require('./config');
 const express = require('express');
 const app = express();
 
-// Configure our HTTP server to respond with Hello World to all requests.
-var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello World\n");
+app.get('/', function(req, res) {
+  res.send('hello, world!');
 });
 
 app.get('/webhook', function(req, res) {
@@ -19,7 +17,7 @@ app.get('/webhook', function(req, res) {
 });
 
 // Listen on port 80, IP defaults to 127.0.0.1
-server.listen(process.env.PORT || constants.PORT);
+app.listen(process.env.PORT || constants.PORT);
 
 // Put a friendly message on the terminal
 console.log("Server running");
