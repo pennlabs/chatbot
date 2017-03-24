@@ -14,7 +14,7 @@ console.log('here')
 
 console.log('here')
 // Listen on port 80, IP defaults to 127.0.0.1
-server.listen(constants.PORT);
+server.listen(process.env.PORT || constants.PORT);
 console.log('here')
 
 // Put a friendly message on the terminal
