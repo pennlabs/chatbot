@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/pennlabs/chatbot/issues"
   },
-  "homepage": "https://github.com/pennlabs/chatbot#readme"
+  "homepage": "https://github.com/pennlabs/chatbot#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
 }
