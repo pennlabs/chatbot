@@ -22,5 +22,8 @@
   "homepage": "https://github.com/pennlabs/chatbot#readme",
   "dependencies": {
     "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.18.0"
   }
 }
