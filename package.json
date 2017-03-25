@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/pennlabs/chatbot#readme",
   "dependencies": {
+    "axios": "^0.15.3",
     "express": "^4.15.2"
   },
   "devDependencies": {

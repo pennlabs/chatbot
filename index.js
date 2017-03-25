@@ -1,5 +1,7 @@
 const constants = require('./config');
+const querystring = require('querystring');
 const express = require('express');
+const axios = require('axios');
 const app = express();
 
 app.get('/', function(req, res) {
@@ -16,7 +18,7 @@ app.get('/webhook', function(req, res) {
   }
 });
 
-app.post('/webhook', function (req, res) {
+app.post('/webhook', function(req, res) {
   var data = req.body;
 
   // Make sure this is a page subscription
@@ -66,12 +68,12 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
+    case 'generic':
+      sendGenericMessage(senderID);
+      break;
 
-      default:
-        sendTextMessage(senderID, messageText);
+    default:
+      sendTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -96,25 +98,37 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function callSendAPI(messageData) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD' },
-    method: 'POST',
-    json: messageData
 
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
-
-      console.log("Successfully sent generic message with id %s to recipient %s",
-        messageId, recipientId);
-    } else {
-      console.error("Unable to send message.");
-      console.error(response);
-      console.error(error);
-    }
+  axios({
+    method: 'post',
+    url: `https://graph.facebook.com/v2.6/me/messages${querystring.stringify({access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD'})}`,
+    data: messageData
+  })
+  .then(() => {
+    console.log('success');
+  })
+  .catch(err => {
+    console.log('failed');
   });
+  // request({
+  //   uri: 'https://graph.facebook.com/v2.6/me/messages',
+  //   qs: { access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD' },
+  //   method: 'POST',
+  //   json: messageData
+
+  // }, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     var recipientId = body.recipient_id;
+  //     var messageId = body.message_id;
+
+  //     console.log("Successfully sent generic message with id %s to recipient %s",
+  //       messageId, recipientId);
+  //   } else {
+  //     console.error("Unable to send message.");
+  //     console.error(response);
+  //     console.error(error);
+  //   }
+  // });
 }
 
 // Listen on port 80, IP defaults to 127.0.0.1
