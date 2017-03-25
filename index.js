@@ -1,9 +1,12 @@
 const constants = require('./config');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 const querystring = require('querystring');
 const express = require('express');
 const axios = require('axios');
 const app = express();
+
+app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
 app.get('/', function(req, res) {
   res.send('hello, world!');
@@ -21,6 +24,10 @@ app.get('/webhook', function(req, res) {
 
 app.post('/webhook', function(req, res) {
   var data = req.body;
+
+  fs.writeFile('secondErrorlog.txt', data, (err) => {
+    if (err) throw err;
+  });
 
   // Make sure this is a page subscription
   if (data.object === 'page') {
@@ -109,6 +116,7 @@ function callSendAPI(messageData) {
     console.log('success');
   })
   .catch(myErr => {
+    console.log('asdfsdfdfsfsfsdffs')
     fs.writeFile('errorlog.txt', myErr, (err) => {
       if (err) throw err;
       console.log('It\'s saved!');
