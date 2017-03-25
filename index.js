@@ -1,4 +1,5 @@
 const constants = require('./config');
+const fs = require('fs');
 const querystring = require('querystring');
 const express = require('express');
 const axios = require('axios');
@@ -107,7 +108,11 @@ function callSendAPI(messageData) {
   .then(() => {
     console.log('success');
   })
-  .catch(err => {
+  .catch(myErr => {
+    fs.writeFile('errorlog.txt', myErr, (err) => {
+      if (err) throw err;
+      console.log('It\'s saved!');
+    });
     console.log('failed');
   });
   // request({
