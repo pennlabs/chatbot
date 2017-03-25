@@ -116,7 +116,7 @@ function callSendAPI(messageData) {
     console.log('success');
   })
   .catch(myErr => {
-    console.log('asdfsdfdfsfsfsdffs');
+    console.log(myErr);
   });
   // request({
   //   uri: 'https://graph.facebook.com/v2.6/me/messages',
