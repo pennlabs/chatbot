@@ -25,10 +25,6 @@ app.get('/webhook', function(req, res) {
 app.post('/webhook', function(req, res) {
   const data = req.body;
 
-  fs.writeFile('secondErrorlog.txt', data, (err) => {
-    if (err) throw err;
-  });
-
   // Make sure this is a page subscription
   if (data.object === 'page') {
 
@@ -79,6 +75,7 @@ function receivedMessage(event) {
     case 'generic':
       sendGenericMessage(senderID);
       break;
+
     case 'hello world':
       sendTextMessage(senderID, "hello to you too");
       break;
