@@ -28,19 +28,15 @@ app.get('/webhook', function(req, res) {
 });
 
 app.post('/webhook', function(req, res) {
-  var data = req.body;
-
-  fs.writeFile('secondErrorlog.txt', data, (err) => {
-    if (err) throw err;
-  });
+  const data = req.body;
 
   // Make sure this is a page subscription
   if (data.object === 'page') {
 
     // Iterate over each entry - there may be multiple if batched
     data.entry.forEach(function(entry) {
-      var pageID = entry.id;
-      var timeOfEvent = entry.time;
+      const pageID = entry.id;
+      const timeOfEvent = entry.time;
 
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
@@ -62,19 +58,19 @@ app.post('/webhook', function(req, res) {
 });
 
 function receivedMessage(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfMessage = event.timestamp;
-  var message = event.message;
+  const senderID = event.sender.id;
+  const recipientID = event.recipient.id;
+  const timeOfMessage = event.timestamp;
+  const message = event.message;
 
   console.log("Received message for user %d and page %d at %d with message:",
     senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
 
-  var messageId = message.mid;
+  const messageId = message.mid;
 
-  var messageText = message.text;
-  var messageAttachments = message.attachments;
+  const messageText = message.text;
+  const messageAttachments = message.attachments;
 
   var json;
 
@@ -101,6 +97,7 @@ function receivedMessage(event) {
       allNames = allNames + names[names.length - 1];
       sendTextMessage(senderID, allNames);
       break;
+
     case 'hello world':
       sendTextMessage(senderID, "hello to you too");
       break;
@@ -118,7 +115,7 @@ function sendGenericMessage(recipientId, messageText) {
 }
 
 function sendTextMessage(recipientId, messageText) {
-  var messageData = {
+  const messageData = {
     recipient: {
       id: recipientId
     },
@@ -131,37 +128,14 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function callSendAPI(messageData) {
-
   axios({
     method: 'post',
     url: `https://graph.facebook.com/v2.6/me/messages?${querystring.stringify({access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD'})}`,
     data: messageData
   })
-  .then(() => {
-    console.log('success');
-  })
   .catch(myErr => {
     console.log(myErr);
   });
-  // request({
-  //   uri: 'https://graph.facebook.com/v2.6/me/messages',
-  //   qs: { access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD' },
-  //   method: 'POST',
-  //   json: messageData
-
-  // }, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     var recipientId = body.recipient_id;
-  //     var messageId = body.message_id;
-
-  //     console.log("Successfully sent generic message with id %s to recipient %s",
-  //       messageId, recipientId);
-  //   } else {
-  //     console.error("Unable to send message.");
-  //     console.error(response);
-  //     console.error(error);
-  //   }
-  // });
 }
 
 // Listen on port 80, IP defaults to 127.0.0.1
