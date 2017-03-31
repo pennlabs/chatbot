@@ -74,19 +74,19 @@ function receivedMessage(event) {
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
     case 'dining':
-      const json;
+      let json;
       $.getJSON('https://api.pennlabs.org/dining/venues',
       function (data) {
         json = data;
       });
-      const info = JSON.parse(json);
-      const names = [];
-      for (const i = 0; i < info.document.venue.length; i++) {  
-        const name = info.document.venue[i].name;
-        names.const(name);
+      let info = JSON.parse(json);
+      let names = [];
+      for (let i = 0; i < info.document.venue.length; i++) {  
+        let name = info.document.venue[i].name;
+        names.push(name);
       }
-      const allNames = "";
-      for (const j = 0; j < names.length -1; j++) {
+      let allNames = "";
+      for (let j = 0; j < names.length -1; j++) {
         allNames = allNames + names[j] + ", ";
       }
       allNames = allNames + names[names.length - 1];
