@@ -8,11 +8,11 @@ const app = express();
 
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.send('hello, world!');
 });
 
-app.get('/webhook', function(req, res) {
+app.get('/webhook', function (req, res) {
   if (req.query['hub.mode'] === 'subscribe' /*&& req.query['hub.verify_token'] === <VERIFY_TOKEN> */) {
     console.log("Validating webhook");
     res.status(200).send(req.query['hub.challenge']);
@@ -22,19 +22,19 @@ app.get('/webhook', function(req, res) {
   }
 });
 
-app.post('/webhook', function(req, res) {
+app.post('/webhook', function (req, res) {
   const data = req.body;
 
   // Make sure this is a page subscription
   if (data.object === 'page') {
 
     // Iterate over each entry - there may be multiple if batched
-    data.entry.forEach(function(entry) {
+    data.entry.forEach(function (entry) {
       const pageID = entry.id;
       const timeOfEvent = entry.time;
 
       // Iterate over each messaging event
-      entry.messaging.forEach(function(event) {
+      entry.messaging.forEach(function (event) {
         if (event.message) {
           receivedMessage(event);
         } else {
@@ -72,16 +72,30 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
-    case 'generic':
-      sendGenericMessage(senderID);
-      break;
+      case 'laundry':
+        $.get('https://api.pennlabs.org/laundry/halls', function (response) {
+          let hallsArray = response['halls'];
+          for (let i = 0; i < hallsArray.length; i++) {
+            let dryers_available = hallsArray[i]['dryers_available'];
+            let name = hallsArray[i]['name'];
+            let washers_available = hallsArray['washers_available'];
 
-    case 'hello world':
-      sendTextMessage(senderID, "hello to you too");
-      break;
+            let ret = name.concat(": There are ").concat(dryers_available).concat(" available dryers and ")
+              .concat(washers_available).concat("washers available!");
 
-    default:
-      sendTextMessage(senderID, messageText);
+            sendTextMessage(senderID, ret);
+          }
+        });
+      case 'generic':
+        sendGenericMessage(senderID);
+        break;
+
+      case 'hello world':
+        sendTextMessage(senderID, "hello to you too");
+        break;
+
+      default:
+        sendTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -111,9 +125,9 @@ function callSendAPI(messageData) {
     url: `https://graph.facebook.com/v2.6/me/messages?${querystring.stringify({access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD'})}`,
     data: messageData
   })
-  .catch(myErr => {
-    console.log(myErr);
-  });
+    .catch(myErr => {
+      console.log(myErr);
+    });
 }
 
 // Listen on port 80, IP defaults to 127.0.0.1
