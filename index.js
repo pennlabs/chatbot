@@ -74,6 +74,7 @@ function receivedMessage(event) {
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
     case 'dining':
+      sendTextMessage(senderID, "here");
       let json;
       $.getJSON('https://api.pennlabs.org/dining/venues',
       function (data) {
