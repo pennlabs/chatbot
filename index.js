@@ -68,26 +68,25 @@ function receivedMessage(event) {
   const messageText = message.text;
   const messageAttachments = message.attachments;
 
-  var json;
-
   if (messageText) {
 
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
     case 'dining':
+      const json;
       $.getJSON('https://api.pennlabs.org/dining/venues',
       function (data) {
         json = data;
       });
-      var info = JSON.parse(json);
-      var names = [];
-      for (var i = 0; i < info.document.venue.length; i++) {  
-        var name = info.document.venue[i].name;
-        names.push(name);
+      const info = JSON.parse(json);
+      const names = [];
+      for (const i = 0; i < info.document.venue.length; i++) {  
+        const name = info.document.venue[i].name;
+        names.const(name);
       }
-      String allNames = "";
-      for (var j = 0; j < names.length -1; j++) {
+      const allNames = "";
+      for (const j = 0; j < names.length -1; j++) {
         allNames = allNames + names[j] + ", ";
       }
       allNames = allNames + names[names.length - 1];
