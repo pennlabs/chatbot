@@ -6,6 +6,11 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
+var script = document.createElement('script');
+script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
+script.type = 'text/javascript';
+document.getElementsByTagName('head')[0].appendChild(script);
+
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
 app.get('/', function(req, res) {
@@ -71,13 +76,30 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
+  var json;
+
   if (messageText) {
 
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
-    case 'generic':
-      sendGenericMessage(senderID);
+    case 'dining':
+      $.getJSON('https://api.pennlabs.org/dining/venues',
+      function (data) {
+        json = data;
+      });
+      var info = JSON.parse(json);
+      var names = [];
+      for (var i = 0; i < info.document.venue.length; i++) {  
+        var name = info.document.venue[i].name;
+        names.push(name);
+      }
+      String allNames = "";
+      for (var j = 0; j < names.length -1; j++) {
+        allNames = allNames + names[j] + ", ";
+      }
+      allNames = allNames + names[names.length - 1];
+      sendTextMessage(senderID, allNames);
       break;
     case 'hello world':
       sendTextMessage(senderID, "hello to you too");
