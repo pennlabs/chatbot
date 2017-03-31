@@ -73,7 +73,7 @@ function receivedMessage(event) {
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
       case 'laundry':
-        $.get('https://api.pennlabs.org/laundry/halls', function (response) {
+        $.getJSON('https://api.pennlabs.org/laundry/halls', function (response) {
           let hallsArray = response['halls'];
           for (let i = 0; i < hallsArray.length; i++) {
             let dryers_available = hallsArray[i]['dryers_available'];
@@ -86,6 +86,7 @@ function receivedMessage(event) {
             sendTextMessage(senderID, ret);
           }
         });
+        break;
       case 'generic':
         sendGenericMessage(senderID);
         break;
