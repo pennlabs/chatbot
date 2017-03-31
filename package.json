@@ -23,7 +23,8 @@
   "dependencies": {
     "axios": "^0.15.3",
     "body-parser": "^1.17.1",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "jquery": "^3.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",

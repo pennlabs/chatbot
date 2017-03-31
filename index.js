@@ -4,12 +4,8 @@ const bodyParser = require('body-parser');
 const querystring = require('querystring');
 const express = require('express');
 const axios = require('axios');
+var $ = require('jquery');
 const app = express();
-
-var script = document.createElement('script');
-script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
-script.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(script);
 
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
