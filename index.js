@@ -73,46 +73,43 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
+    case 'laundry':
+      $.getJSON('https://api.pennlabs.org/laundry/halls', function (response) {
+        const hallsArray = response['halls'];
+        for (let i = 0; i < hallsArray.length; i++) {
+          const dryers_available = hallsArray[i]['dryers_available'];
+          const name = hallsArray[i]['name'];
+          const washers_available = hallsArray['washers_available'];
 
-      case 'laundry':
-        $.getJSON('https://api.pennlabs.org/laundry/halls', function (response) {
-          const hallsArray = response['halls'];
-          for (let i = 0; i < hallsArray.length; i++) {
-            const dryers_available = hallsArray[i]['dryers_available'];
-            const name = hallsArray[i]['name'];
-            const washers_available = hallsArray['washers_available'];
+          const ret =`
+          ${name} + : There are + ${dryers_available} + available dryers and  + ${washers_available}
+                + washers available!`;
 
-            const ret =`
-            ${name} + : There are + ${dryers_available} + available dryers and  + ${washers_available}
-                  + washers available!`;
-
-            sendTextMessage(senderID, ret);
-          }
-        });
-        break;
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
+          sendTextMessage(senderID, ret);
+        }
+      });
+      break;
 
     case 'dining':
       sendTextMessage(senderID, "here");
-      let json;
-      $.getJSON('https://api.pennlabs.org/dining/venues',
-      function (data) {
-        json = data;
+      axios('https://api.pennlabs.org/dining/venues')
+      .then(({ data }) => {
+        const info = data;
+        const names = [];
+        for (let i = 0; i < info.document.venue.length; i++) {
+          const name = info.document.venue[i].name;
+          names.push(name);
+        }
+        let allNames = "";
+        for (let j = 0; j < names.length -1; j++) {
+          allNames = allNames + names[j] + ", ";
+        }
+        allNames = allNames + names[names.length - 1];
+        sendTextMessage(senderID, allNames);
+      })
+      .catch(err => {
+        console.log(err);
       });
-      let info = JSON.parse(json);
-      let names = [];
-      for (let i = 0; i < info.document.venue.length; i++) {
-        let name = info.document.venue[i].name;
-        names.push(name);
-      }
-      let allNames = "";
-      for (let j = 0; j < names.length -1; j++) {
-        allNames = allNames + names[j] + ", ";
-      }
-      allNames = allNames + names[names.length - 1];
-      sendTextMessage(senderID, allNames);
       break;
 
     case 'hello world':
