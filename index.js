@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const querystring = require('querystring');
 const express = require('express');
 const axios = require('axios');
+var $ = require('jquery');
 const app = express();
 
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
@@ -21,15 +22,15 @@ app.get('/webhook', function (req, res) {
     res.sendStatus(403);
   }
 });
-
-app.post('/webhook', function (req, res) {
+app.post('/webhook', function(req, res) {
   const data = req.body;
 
   // Make sure this is a page subscription
   if (data.object === 'page') {
 
     // Iterate over each entry - there may be multiple if batched
-    data.entry.forEach(function (entry) {
+
+    data.entry.forEach(function(entry) {
       const pageID = entry.id;
       const timeOfEvent = entry.time;
 
@@ -72,6 +73,7 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
+
       case 'laundry':
         $.getJSON('https://api.pennlabs.org/laundry/halls', function (response) {
           let hallsArray = response['halls'];
@@ -92,12 +94,34 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
 
-      case 'hello world':
-        sendTextMessage(senderID, "hello to you too");
-        break;
+    case 'dining':
+      sendTextMessage(senderID, "here");
+      let json;
+      $.getJSON('https://api.pennlabs.org/dining/venues',
+      function (data) {
+        json = data;
+      });
+      let info = JSON.parse(json);
+      let names = [];
+      for (let i = 0; i < info.document.venue.length; i++) {  
+        let name = info.document.venue[i].name;
+        names.push(name);
+      }
+      let allNames = "";
+      for (let j = 0; j < names.length -1; j++) {
+        allNames = allNames + names[j] + ", ";
+      }
+      allNames = allNames + names[names.length - 1];
+      sendTextMessage(senderID, allNames);
+      break;
 
-      default:
-        sendTextMessage(senderID, messageText);
+    case 'hello world':
+      sendTextMessage(senderID, "hello to you too");
+      break;
+
+    default:
+      sendTextMessage(senderID, messageText);
+
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -127,9 +151,10 @@ function callSendAPI(messageData) {
     url: `https://graph.facebook.com/v2.6/me/messages?${querystring.stringify({access_token: 'EAAEQEjXxPH8BAHuDLhgA1f8CQOlY5jU1yvYleRKZA3ZAlO4xc7JJMF1XJvRysX4tm9GxAjVTBpivZC4EL8hAZAW5MJA0khY0YKlmZBUJI8BF87aS0Lgl0C6Ynak7GRZBKOAbm0XZB7YxI6oS2MtlSuANPrSG6EZBRlbveZCAQd2aO5gZDZD'})}`,
     data: messageData
   })
-    .catch(myErr => {
-      console.log(myErr);
-    });
+
+  .catch(myErr => {
+    console.log(myErr);
+  });
 }
 
 // Listen on port 80, IP defaults to 127.0.0.1
