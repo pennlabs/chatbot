@@ -74,7 +74,8 @@ function receivedMessage(event) {
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
     case 'laundry':
-      $.getJSON('https://api.pennlabs.org/laundry/halls', function (response) {
+      axios('https://api.pennlabs.org/laundry/halls')
+      .then(({ response }) => {
         const hallsArray = response['halls'];
         for (let i = 0; i < hallsArray.length; i++) {
           const dryers_available = hallsArray[i]['dryers_available'];
@@ -87,6 +88,8 @@ function receivedMessage(event) {
 
           sendTextMessage(senderID, ret);
         }
+      }).catch(err => {
+        console.log(err);
       });
       break;
 
