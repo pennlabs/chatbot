@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const querystring = require('querystring');
 const express = require('express');
 const axios = require('axios');
-var $ = require('jquery');
+const $ = require('jquery');
 const app = express();
 
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
@@ -76,15 +76,15 @@ function receivedMessage(event) {
 
       case 'laundry':
         $.getJSON('https://api.pennlabs.org/laundry/halls', function (response) {
-          let hallsArray = response['halls'];
+          const hallsArray = response['halls'];
           for (let i = 0; i < hallsArray.length; i++) {
-            let dryers_available = hallsArray[i]['dryers_available'];
-            let name = hallsArray[i]['name'];
-            let washers_available = hallsArray['washers_available'];
+            const dryers_available = hallsArray[i]['dryers_available'];
+            const name = hallsArray[i]['name'];
+            const washers_available = hallsArray['washers_available'];
 
-            const ret =
-            ${name} + ': There are ' + ${dryers_available} + 'available dryers and ' + ${washers_available}
-                  + 'washers available!';
+            const ret =`
+            ${name} + : There are + ${dryers_available} + available dryers and  + ${washers_available}
+                  + washers available!`;
 
             sendTextMessage(senderID, ret);
           }
@@ -103,7 +103,7 @@ function receivedMessage(event) {
       });
       let info = JSON.parse(json);
       let names = [];
-      for (let i = 0; i < info.document.venue.length; i++) {  
+      for (let i = 0; i < info.document.venue.length; i++) {
         let name = info.document.venue[i].name;
         names.push(name);
       }
