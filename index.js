@@ -80,8 +80,9 @@ function receivedMessage(event) {
             let name = hallsArray[i]['name'];
             let washers_available = hallsArray['washers_available'];
 
-            let ret = name.concat(": There are ").concat(dryers_available).concat(" available dryers and ")
-              .concat(washers_available).concat("washers available!");
+            const ret =
+            ${name} + ': There are ' + ${dryers_available} + 'available dryers and ' + ${washers_available}
+                  + 'washers available!';
 
             sendTextMessage(senderID, ret);
           }
