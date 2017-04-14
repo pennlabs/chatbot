@@ -7,6 +7,13 @@ const axios = require('axios');
 const $ = require('jquery');
 const app = express();
 
+const dining_keywords = ['houston', 'commons', 'kings court', '1920', 'hill', 'english', 'falk', 'kosher', 'marks', 'accenture'
+, 'e-cafe', 'ecafe', 'joes', 'nch', 'new college house', 'beefsteak', 'gourmet grocer', 'frontere', 'starbucks'];
+
+const laundry_keywords = ['harnwell', 'harrison', 'rodin', 'quad', 'craig', 'bishop white', 'kings court', 'english house', 'gregory'
+, 'class of 1925', 'DuBois', 'mayer', 'morgan', 'butcher', 'hill', 'norteastern', 'stouffer', 'northwest', 'magee', 'sansom place'
+,'east', 'west', 'van pelt manor', 'southeast', 'class of 1928', 'southwest'];
+
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
 app.get('/', function (req, res) {
@@ -83,7 +90,7 @@ function receivedMessage(event) {
             for(let k = 0; k < name_words.length; k++) {
               const name_word = name_words[k];
               if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
-                const current_date = new Date(); 
+                const current_date = new Date();
                 if(hours === undefined) {
                   sendTextMessage(senderID, `${name} does not have any listed hours.`);
                 }
@@ -91,7 +98,7 @@ function receivedMessage(event) {
                   for(let l = 0; l < hours.length; l++) {
                     const date = hours[l].date;
                     const full_date = date.split("-");
-                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] && 
+                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] &&
                     (current_date.getDay()).toString() === full_date[2]) {
                       let found = false;
                       for(let n = 0; n < hours.meal.length; n++) {
