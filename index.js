@@ -80,9 +80,11 @@ function receivedMessage(event) {
           const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
           for(let j = 0; j < keywords.length; j++) {
             const word = keywords[j];
+            sendTextMessage(senderID, `keyword: ${word}`);
             for(let k = 0; k < name_words.length; k++) {
               const name_word = name_words[k];
               if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
+                sendTextMessage(senderID, `match for ${name}`);
                 const current_date = new Date(); 
                 if(hours === undefined) {
                   sendTextMessage(senderID, `${name} does not have any listed hours.`);
@@ -90,9 +92,11 @@ function receivedMessage(event) {
                 else {
                   for(let l = 0; l < hours.length; l++) {
                     const date = hours[l].date;
+                    sendTextMessage(senderID, `date: ${date}`);
                     const full_date = date.split("-");
                     if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] && 
                     (current_date.getDay()).toString() === full_date[2]) {
+                      sendTextMessage(senderID, `date match!`);
                       let found = false;
                       for(let n = 0; n < hours.meal.length; n++) {
                         const openTime = hours.meal[n].open;
