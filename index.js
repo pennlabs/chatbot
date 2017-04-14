@@ -104,11 +104,11 @@ function receivedMessage(event) {
 
                     const year = (current_date.getFullYear()).toString() === full_date[0];
                     const month = (current_date.getMonth()).toString() === full_date[1];
-                    sendTextMessage(senderID, (current_date.getMonth()).toString());
-                    sendTextMessage(senderID, full_date[1]);
+                    sendTextMessage(senderID, "current date month: " + (current_date.getMonth()).toString());
+                    sendTextMessage(senderID, "data month: " + full_date[1]);
                     const day = (current_date.getDay()).toString() === full_date[2];
-                    sendTextMessage(senderID, (current_date.getDay()).toString());
-                    sendTextMessage(senderID, full_date[2]);
+                    sendTextMessage(senderID, "current date day: " + (current_date.getDay()).toString());
+                    sendTextMessage(senderID, "data day: " + full_date[2]);
                     sendTextMessage(senderID, `${year} ${month} ${day}`);
                     if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] && 
                     (current_date.getDay()).toString() === full_date[2]) {
