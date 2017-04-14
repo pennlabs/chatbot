@@ -70,6 +70,46 @@ function receivedMessage(event) {
 
   if (messageText) {
 
+    axios('https://api.pennlabs.org/dining/venues')
+      .then(({ data }) => {
+        const info = data;
+        const keywords = messageText.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
+        for (let i = 0; i < info.document.venue.length; i++) {
+          const name = info.document.venue[i].name;
+          const hours = info.document.venue[i].dateHours;
+          const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
+          for(let j = 0; j < keywords.length; j++) {
+            const word = keywords[j];
+            for(let k = 0; k < name_words.length; k++) {
+              const name_word = name_words[k];
+              if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
+                const current_date = new Date(); 
+                if(hours === undefined) {
+                  sendTextMessage(senderID, `${name} does not have any listed hours.`);
+                }
+                else {
+                  for(let l = 0; l < hours.length; l++) {
+                    const date = hours[l].date;
+                    const full_date = date.split("-");
+                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] && 
+                    (current_date.getDay()).toString() === full_date[2]) {
+                      let found = false;
+                      for(let n = 0; n < hours.meal.length; n++) {
+                        const openTime = hours.meal[n].open;
+                        const closeTime = hours.meal[n].close;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     switch (messageText) {
@@ -91,7 +131,6 @@ function receivedMessage(event) {
       break;
 
     case 'dining':
-      sendTextMessage(senderID, "here");
       axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
@@ -123,10 +162,6 @@ function receivedMessage(event) {
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
-}
-
-function sendGenericMessage(recipientId, messageText) {
-  // To be expanded in later sections
 }
 
 function sendTextMessage(recipientId, messageText) {
