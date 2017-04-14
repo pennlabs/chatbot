@@ -94,14 +94,20 @@ function receivedMessage(event) {
                     const date = hours[l].date;
                     sendTextMessage(senderID, `date: ${date}`);
                     const full_date = date.split("-");
+                    const year = (current_date.getFullYear()).toString() === full_date[0];
+                    const month = (current_date.getMonth()).toString() === full_date[1];
+                    const day = (current_date.getDay()).toString() === full_date[2];
+                    sendTextMessage(senderID, `${year} ${month} ${day}`);
                     if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] && 
                     (current_date.getDay()).toString() === full_date[2]) {
                       sendTextMessage(senderID, `date match!`);
                       let found = false;
                       for(let n = 0; n < hours.meal.length; n++) {
                         const openTime = hours.meal[n].open;
+                        sendTextMessage(senderID, `open time: ${openTime}`);
                         const openArray = openTime.split(":");
                         const closeTime = hours.meal[n].close;
+                        sendTextMessage(senderID, `close time: ${closeTime}`);
                         const closeArray = closeTime.split(":");
                         if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
                         (current_date.getHours < closeArray[0] || (current_date.getHours = closeArray[0] && current_date.getMinutes <= closeArray[1]))) {
