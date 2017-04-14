@@ -96,7 +96,19 @@ function receivedMessage(event) {
                       let found = false;
                       for(let n = 0; n < hours.meal.length; n++) {
                         const openTime = hours.meal[n].open;
+                        const openArray = openTime.split(":");
                         const closeTime = hours.meal[n].close;
+                        const closeArray = closeTime.split(":");
+                        if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
+                        (current_date.getHours < closeArray[0] || (current_date.getHours = closeArray[0] && current_date.getMinutes <= closeArray[1]))) {
+                          found = true;
+                        }
+                      }
+                      if(found === true) {
+                        sendTextMessage(senderID, `${name} is open! :)`);
+                      }
+                      else {
+                        sendTextMessage(senderID, `${name} is closed. :(`);
                       }
                     }
                   }
