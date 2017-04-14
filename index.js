@@ -7,6 +7,13 @@ const axios = require('axios');
 const $ = require('jquery');
 const app = express();
 
+const dining_keywords = ['houston', 'commons', 'kings court', '1920', 'hill', 'english', 'falk', 'kosher', 'marks', 'accenture'
+, 'e-cafe', 'ecafe', 'joes', 'nch', 'new college house', 'beefsteak', 'gourmet grocer', 'frontere', 'starbucks'];
+
+const laundry_keywords = ['harnwell', 'harrison', 'rodin', 'quad', 'craig', 'bishop white', 'kings court', 'english house', 'gregory'
+, 'class of 1925', 'DuBois', 'mayer', 'morgan', 'butcher', 'hill', 'norteastern', 'stouffer', 'northwest', 'magee', 'sansom place'
+,'east', 'west', 'van pelt manor', 'southeast', 'class of 1928', 'southwest'];
+
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
 app.get('/', function (req, res) {
@@ -94,6 +101,7 @@ function receivedMessage(event) {
                     const date = hours[l].date;
                     sendTextMessage(senderID, `date: ${date}`);
                     const full_date = date.split("-");
+
                     const year = (current_date.getFullYear()).toString() === full_date[0];
                     const month = (current_date.getMonth()).toString() === full_date[1];
                     const day = (current_date.getDay()).toString() === full_date[2];
