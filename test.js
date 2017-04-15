@@ -3,7 +3,7 @@ const responses = require('./getResponse.js');
 const keywords = require('./keywords.js');
 
 keywords.init();
-const messageText = keywords.closestMatch("stabuck");
+const messageText = keywords.closestMatch("coleg");
 
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
