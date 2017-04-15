@@ -1,17 +1,67 @@
 const axios = require('axios');
-
-axios('https://api.pennlabs.org/laundry/halls')
+const messageText = "commons";
+axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
-        const response = data;
-        const hallsArray = response['halls'];
-        for (let i = 0; i < hallsArray.length; i++) {
-          const dryers_available = hallsArray[i]['dryers_available'];
-          const name = hallsArray[i]['name'];
-          const washers_available = hallsArray[i]['washers_available'];
-          const ret =`${name}: There are ${dryers_available} available dryers and ${washers_available} washers available!`;
+        const info = data;
+        const keywords = messageText.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
+        for (let i = 0; i < info.document.venue.length; i++) {
+          const name = info.document.venue[i].name;
+          const hours = info.document.venue[i].dateHours;
+          const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
+          for(let j = 0; j < keywords.length; j++) {
+            const word = keywords[j];
+            for(let k = 0; k < name_words.length; k++) {
+              const name_word = name_words[k];
+              if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
+                console.log(`match for ${name}`);
+                const current_date = new Date(); 
+                if(hours === undefined) {
+                  console.log(`${name} does not have any listed hours.`);
+                }
+                else {
+                  for(let l = 0; l < hours.length; l++) {
+                    const date = hours[l].date;
+                    console.log(`date: ${date}`);
+                    const full_date = date.split("-");
 
-          console.log(ret);
+                    const year = (current_date.getFullYear()).toString() === full_date[0];
+                    const month = ("0" + (current_date.getMonth() + 1).toString()) === full_date[1];
+                    console.log("current date month: " + "0" + (current_date.getMonth() + 1).toString());
+                    console.log("data month: " + full_date[1]);
+                    const day = (current_date.getDate()).toString() === full_date[2];
+                    console.log("current date day: " + (current_date.getDate()).toString());
+                    console.log("data day: " + full_date[2]);
+                    console.log(`${year} ${month} ${day}`);
+                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth() + 1).toString() === full_date[1] && 
+                    (current_date.getDate()).toString() === full_date[2]) {
+                      console.log(`date match!`);
+                      let found = false;
+                      for(let n = 0; n < hours.meal.length; n++) {
+                        const openTime = hours.meal[n].open;
+                        console.log(`open time: ${openTime}`);
+                        const openArray = openTime.split(":");
+                        const closeTime = hours.meal[n].close;
+                        console.log(`close time: ${closeTime}`);
+                        const closeArray = closeTime.split(":");
+                        if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
+                        (current_date.getHours < closeArray[0] || (current_date.getHours = closeArray[0] && current_date.getMinutes <= closeArray[1]))) {
+                          found = true;
+                        }
+                      }
+                      if(found === true) {
+                        console.log(`${name} is open! :)`);
+                      }
+                      else {
+                        console.log(`${name} is closed. :(`);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
-      }).catch(err => {
+      })
+      .catch(err => {
         console.log(err);
       });
