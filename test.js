@@ -1,5 +1,5 @@
 const axios = require('axios');
-const messageText = "commons";
+const messageText = "college";
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
@@ -19,6 +19,7 @@ axios('https://api.pennlabs.org/dining/venues')
                   console.log(`${name} does not have any listed hours.`);
                 }
                 else {
+                  let match = false;
                   for(let l = 0; l < hours.length; l++) {
                     const date = hours[l].date;
                     console.log(`date: ${date}`);
@@ -34,12 +35,13 @@ axios('https://api.pennlabs.org/dining/venues')
                     if((current_date.getFullYear()).toString() === full_date[0] && ("0" + (current_date.getMonth() + 1).toString()) === full_date[1] && 
                     (current_date.getDate()).toString() === full_date[2]) {
                       console.log(`date match!`);
+                      match = true;
                       let found = false;
-                      for(let n = 0; n < hours.meal.length; n++) {
-                        const openTime = hours.meal[n].open;
+                      for(let n = 0; n < hours[l].meal.length; n++) {
+                        const openTime = hours[l].meal[n].open;
                         console.log(`open time: ${openTime}`);
                         const openArray = openTime.split(":");
-                        const closeTime = hours.meal[n].close;
+                        const closeTime = hours[l].meal[n].close;
                         console.log(`close time: ${closeTime}`);
                         const closeArray = closeTime.split(":");
                         if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
@@ -54,6 +56,9 @@ axios('https://api.pennlabs.org/dining/venues')
                         console.log(`${name} is closed. :(`);
                       }
                     }
+                  }
+                  if(match === false) {
+                    console.log(`${name} is closed. :(`);
                   }
                 }
               }
