@@ -87,7 +87,6 @@ function receivedMessage(event) {
           const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
           for(let j = 0; j < keywords.length; j++) {
             const word = keywords[j];
-            sendTextMessage(senderID, `keyword: ${word}`);
             for(let k = 0; k < name_words.length; k++) {
               const name_word = name_words[k];
               if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
@@ -103,15 +102,15 @@ function receivedMessage(event) {
                     const full_date = date.split("-");
 
                     const year = (current_date.getFullYear()).toString() === full_date[0];
-                    const month = (current_date.getMonth()).toString() === full_date[1];
-                    sendTextMessage(senderID, "current date month: " + (current_date.getMonth()).toString());
+                    const month = (current_date.getMonth() + 1).toString() === full_date[1];
+                    sendTextMessage(senderID, "current date month: " + (current_date.getMonth() + 1).toString());
                     sendTextMessage(senderID, "data month: " + full_date[1]);
-                    const day = (current_date.getDay()).toString() === full_date[2];
-                    sendTextMessage(senderID, "current date day: " + (current_date.getDay()).toString());
+                    const day = (current_date.getDate()).toString() === full_date[2];
+                    sendTextMessage(senderID, "current date day: " + (current_date.getDate()).toString());
                     sendTextMessage(senderID, "data day: " + full_date[2]);
                     sendTextMessage(senderID, `${year} ${month} ${day}`);
-                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth()).toString() === full_date[1] && 
-                    (current_date.getDay()).toString() === full_date[2]) {
+                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth() + 1).toString() === full_date[1] && 
+                    (current_date.getDate()).toString() === full_date[2]) {
                       sendTextMessage(senderID, `date match!`);
                       let found = false;
                       for(let n = 0; n < hours.meal.length; n++) {
