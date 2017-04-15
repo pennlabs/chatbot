@@ -77,6 +77,8 @@ function receivedMessage(event) {
 
   if (messageText) {
 
+    let printed = false;
+
     axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
@@ -91,6 +93,7 @@ function receivedMessage(event) {
               const name_word = name_words[k];
               if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
                 const current_date = new Date(); 
+                printed = true;
                 if(hours === undefined) {
                   sendTextMessage(senderID, `${name} does not have any listed hours.`);
                 }
@@ -227,7 +230,9 @@ function receivedMessage(event) {
       break;
 
     default:
-      sendTextMessage(senderID, messageText);
+      if(printed === false) {
+        sendTextMessage(senderID, messageText);
+      }
 
     }
   } else if (messageAttachments) {
