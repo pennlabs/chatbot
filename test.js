@@ -23,7 +23,6 @@ axios('https://api.pennlabs.org/dining/venues')
                     const date = hours[l].date;
                     console.log(`date: ${date}`);
                     const full_date = date.split("-");
-
                     const year = (current_date.getFullYear()).toString() === full_date[0];
                     const month = ("0" + (current_date.getMonth() + 1).toString()) === full_date[1];
                     console.log("current date month: " + "0" + (current_date.getMonth() + 1).toString());
@@ -32,7 +31,7 @@ axios('https://api.pennlabs.org/dining/venues')
                     console.log("current date day: " + (current_date.getDate()).toString());
                     console.log("data day: " + full_date[2]);
                     console.log(`${year} ${month} ${day}`);
-                    if((current_date.getFullYear()).toString() === full_date[0] && (current_date.getMonth() + 1).toString() === full_date[1] && 
+                    if((current_date.getFullYear()).toString() === full_date[0] && ("0" + (current_date.getMonth() + 1).toString()) === full_date[1] && 
                     (current_date.getDate()).toString() === full_date[2]) {
                       console.log(`date match!`);
                       let found = false;
