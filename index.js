@@ -6,7 +6,10 @@ const express = require('express');
 const axios = require('axios');
 const $ = require('jquery');
 const responses = require('./getResponse.js');
+const keywords = require('./keywords.js');
 const app = express();
+
+keywords.init();
 
 const dining_keywords = ['houston', 'commons', 'kings court', '1920', 'hill', 'english', 'falk', 'kosher', 'marks', 'accenture'
 , 'e-cafe', 'ecafe', 'joes', 'nch', 'new college house', 'beefsteak', 'gourmet grocer', 'frontera', 'starbucks'];
@@ -73,12 +76,14 @@ function receivedMessage(event) {
 
   const messageId = message.mid;
 
-  const messageText = message.text;
+  let messageText = message.text;
   const messageAttachments = message.attachments;
 
   if (messageText) {
 
     let printed = false;
+
+    messageText = keywords.closestMatch(messageText);
 
     axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
