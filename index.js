@@ -16,11 +16,11 @@ const laundry_keywords = ['harnwell', 'harrison', 'rodin', 'quad', 'craig', 'bis
 
 app.use(bodyParser.json({type: '*/*'})); //parses incoming requests into JSON
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.send('hello, world!');
 });
 
-app.get('/webhook', function (req, res) {
+app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' /*&& req.query['hub.verify_token'] === <VERIFY_TOKEN> */) {
     console.log("Validating webhook");
     res.status(200).send(req.query['hub.challenge']);
@@ -42,7 +42,7 @@ app.post('/webhook', function(req, res) {
       const timeOfEvent = entry.time;
 
       // Iterate over each messaging event
-      entry.messaging.forEach(function (event) {
+      entry.messaging.forEach(function(event) {
         if (event.message) {
           receivedMessage(event);
         } else {
