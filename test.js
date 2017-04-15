@@ -3,13 +3,18 @@ const responses = require('./getResponse.js');
 
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
-        console.log(responses.getResponse("starbucks", data));
+        const response = responses.getResponse("starbucks", data);
+        if(response.length > 0) {
+          for(let i = 0; i < response.length; i++) {
+            console.log(response[i]);
+          }
+        }
       })
       .catch(err => {
         console.log(err);
       });
 
-const messageText = "starbucks";
+/*const messageText = "starbucks";
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
@@ -80,4 +85,4 @@ axios('https://api.pennlabs.org/dining/venues')
       })
       .catch(err => {
         console.log(err);
-      });
+      });*/
