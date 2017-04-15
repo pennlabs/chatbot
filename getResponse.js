@@ -34,11 +34,11 @@ function getResponse(messageText, data) {
                     const closeTime = hours[l].meal[n].close;
                     responses.push(closeTime);
                     const closeArray = closeTime.split(":");
-                    responses.push(current_date.getHours() - 7 + ":" + current_date.getMinutes());
-                    responses.push((current_date.getHours() - 7 > openArray[0] || (current_date.getHours() - 7 === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
-                    (current_date.getHours() - 7 < closeArray[0] || (current_date.getHours() - 7 === closeArray[0] && current_date.getMinutes() <= closeArray[1])));
-                    if((current_date.getHours() - 7 > openArray[0] || (current_date.getHours() - 7 === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
-                    (current_date.getHours() - 7 < closeArray[0] || (current_date.getHours() - 7 === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
+                    responses.push(current_date.getHours() - 4 + ":" + current_date.getMinutes());
+                    responses.push((current_date.getHours() - 4 > openArray[0] || (current_date.getHours() - 4 === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
+                    (current_date.getHours() - 4 < closeArray[0] || (current_date.getHours() - 4 === closeArray[0] && current_date.getMinutes() <= closeArray[1])));
+                    if((current_date.getHours() - 4 > openArray[0] || (current_date.getHours() - 4 === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
+                    (current_date.getHours() - 4 < closeArray[0] || (current_date.getHours() - 4 === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
                         found = true;
                     }
                     }
