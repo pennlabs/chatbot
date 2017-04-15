@@ -1,10 +1,10 @@
 'use strict';
 require('fuzzyset.js');
 
-const dining_keywords = ['houston', 'commons', 'kings court', '1920', 'hill', 'english', 'falk', 'kosher', 'marks', 'accenture'
-, 'e-cafe', 'ecafe', 'joes', 'nch', 'new college house', 'beefsteak', 'gourmet grocer', 'frontere', 'starbucks'];
+const dining_keywords = ['dining', 'houston', 'commons', 'kings court', '1920', 'hill', 'english', 'falk', 'kosher', 'marks', 'accenture'
+, 'e-cafe', 'ecafe', 'joes', 'nch', 'new college house', 'beefsteak', 'gourmet grocer', 'frontera', 'starbucks'];
 
-const laundry_keywords = ['harnwell', 'harrison', 'rodin', 'quad', 'craig', 'bishop white', 'kings court', 'english house', 'gregory'
+const laundry_keywords = ['laundry', 'harnwell', 'harrison', 'rodin', 'quad', 'craig', 'bishop white', 'kings court', 'english house', 'gregory'
 , 'class of 1925', 'DuBois', 'mayer', 'morgan', 'butcher', 'hill', 'norteastern', 'stouffer', 'northwest', 'magee', 'sansom place'
 ,'east', 'west', 'van pelt manor', 'southeast', 'class of 1928', 'southwest'];
 
