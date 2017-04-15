@@ -1,9 +1,13 @@
 const axios = require('axios');
 const responses = require('./getResponse.js');
+const keywords = require('./keywords.js');
+
+keywords.init();
+const messageText = keywords.closestMatch("stabuck");
 
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
-        const response = responses.getResponse("starbucks", data);
+        const response = responses.getResponse(messageText, data);
         if(response.length > 0) {
           for(let i = 0; i < response.length; i++) {
             console.log(response[i]);
@@ -86,8 +90,4 @@ axios('https://api.pennlabs.org/dining/venues')
       })
       .catch(err => {
         console.log(err);
-<<<<<<< HEAD
       });*/
-=======
-      });
->>>>>>> 87e3beaf05ce0ac3a24588abbf8ae420a2fde978
