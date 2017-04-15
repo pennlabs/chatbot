@@ -1,5 +1,5 @@
 const axios = require('axios');
-const messageText = "starbucks";
+const messageText = "frontera";
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
