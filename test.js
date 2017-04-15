@@ -1,5 +1,5 @@
 const axios = require('axios');
-const messageText = "college";
+const messageText = "starbucks";
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
@@ -44,8 +44,10 @@ axios('https://api.pennlabs.org/dining/venues')
                         const closeTime = hours[l].meal[n].close;
                         console.log(`close time: ${closeTime}`);
                         const closeArray = closeTime.split(":");
-                        if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
-                        (current_date.getHours < closeArray[0] || (current_date.getHours = closeArray[0] && current_date.getMinutes <= closeArray[1]))) {
+                        const currTime = current_date.getHours() + ":" + current_date.getMinutes();
+                        console.log(`current time: ${currTime}`);
+                        if((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
+                        (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
                           found = true;
                         }
                       }

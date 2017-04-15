@@ -112,8 +112,8 @@ function receivedMessage(event) {
                         const openArray = openTime.split(":");
                         const closeTime = hours[l].meal[n].close;
                         const closeArray = closeTime.split(":");
-                        if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
-                        (current_date.getHours < closeArray[0] || (current_date.getHours = closeArray[0] && current_date.getMinutes <= closeArray[1]))) {
+                        if((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
+                        (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
                           found = true;
                         }
                       }
@@ -197,8 +197,8 @@ function receivedMessage(event) {
                           const openArray = openTime.split(":");
                           const closeTime = hours[l].meal[n].close;
                           const closeArray = closeTime.split(":");
-                          if((current_date.getHours > openArray[0] || (current_date.getHours = openArray[0] && current_date.getMinutes >= openArray[1])) &&
-                          (current_date.getHours < closeArray[0] || (current_date.getHours = closeArray[0] && current_date.getMinutes <= closeArray[1]))) {
+                          if((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
+                          (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
                             found = true;
                           }
                         }
