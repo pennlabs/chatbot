@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 function getResponse(messageText, data) {
+    const responses = [];
     const info = data;
     const keywords = messageText.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
     for (let i = 0; i < info.document.venue.length; i++) {
@@ -14,7 +15,8 @@ function getResponse(messageText, data) {
             if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
             const current_date = new Date(); 
             if(hours === undefined) {
-                return `${name} does not have any listed hours.`;
+                const response = `${name} does not have any listed hours.`;
+                responses.push(response);
             }
             else {
                 let match = false;
@@ -36,21 +38,25 @@ function getResponse(messageText, data) {
                     }
                     }
                     if(found === true) {
-                        return `${name} is open! :)`;
+                        const response = `${name} is open! :)`;
+                        responses.push(response);
                     }
                     else {
-                        return `${name} is closed. :(`;
+                        const response = `${name} is closed. :(`;
+                        responses.push(response);
                     }
                 }
                 }
                 if(match === false) {
-                    return `${name} is closed. :(`;
+                    const response = `${name} is closed. :(`;
+                    responses.push(response);
                 }
             }
             }
         }
         }
     }
+    return responses;
 }
 
 module.exports = {

@@ -83,9 +83,11 @@ function receivedMessage(event) {
     axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const response = responses.getResponse(messageText, data);
-        if(response != undefined) {
+        if(response.length > 0) {
           printed = true;
-          sendTextMessage(senderID, response);
+          for(let i = 0; i < response.length; i++) {
+            sendTextMessage(senderID, response[i]);
+          }
         }
       })
       .catch(err => {
@@ -123,8 +125,11 @@ function receivedMessage(event) {
         }
         for (let j = 0; j < names.length; j++) {
           const response = responses.getResponse(names[j], data);
-          if(response != undefined) {
-            sendTextMessage(senderID, response);
+          if(response.length > 0) {
+            printed = true;
+            for(let i = 0; i < response.length; i++) {
+              sendTextMessage(senderID, response[i]);
+            }
           }
         }
       })
