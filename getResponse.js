@@ -29,9 +29,14 @@ function getResponse(messageText, data) {
                     let found = false;
                     for(let n = 0; n < hours[l].meal.length; n++) {
                     const openTime = hours[l].meal[n].open;
+                    console.log(openTime);
                     const openArray = openTime.split(":");
                     const closeTime = hours[l].meal[n].close;
+                    console.log(closeTime);
                     const closeArray = closeTime.split(":");
+                    console.log(current_date.getHours() + ":" + current_date.getMinutes());
+                    console.log((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
+                    (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1])));
                     if((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
                     (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
                         found = true;

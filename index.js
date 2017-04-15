@@ -88,6 +88,7 @@ function receivedMessage(event) {
     axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const response = responses.getResponse(messageText, data);
+        console.log(response);
         if(response.length > 0) {
           printed = true;
           for(let i = 0; i < response.length; i++) {
