@@ -5,6 +5,7 @@ const querystring = require('querystring');
 const express = require('express');
 const axios = require('axios');
 const $ = require('jquery');
+const responses = require('./getResponse.js');
 const app = express();
 
 const dining_keywords = ['houston', 'commons', 'kings court', '1920', 'hill', 'english', 'falk', 'kosher', 'marks', 'accenture'
@@ -81,57 +82,10 @@ function receivedMessage(event) {
 
     axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
-        const info = data;
-        const keywords = messageText.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
-        for (let i = 0; i < info.document.venue.length; i++) {
-          const name = info.document.venue[i].name;
-          const hours = info.document.venue[i].dateHours;
-          const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
-          for(let j = 0; j < keywords.length; j++) {
-            const word = keywords[j];
-            for(let k = 0; k < name_words.length; k++) {
-              const name_word = name_words[k];
-              if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
-                const current_date = new Date(); 
-                printed = true;
-                if(hours === undefined) {
-                  sendTextMessage(senderID, `${name} does not have any listed hours.`);
-                }
-                else {
-                  let match = false;
-                  for(let l = 0; l < hours.length; l++) {
-                    const date = hours[l].date;
-                    const full_date = date.split("-");
-                    if((current_date.getFullYear()).toString() === full_date[0] && ("0" + (current_date.getMonth() + 1).toString()) === full_date[1] && 
-                    (current_date.getDate()).toString() === full_date[2]) {
-                      console.log(`date match!`);
-                      match = true;
-                      let found = false;
-                      for(let n = 0; n < hours[l].meal.length; n++) {
-                        const openTime = hours[l].meal[n].open;
-                        const openArray = openTime.split(":");
-                        const closeTime = hours[l].meal[n].close;
-                        const closeArray = closeTime.split(":");
-                        if((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
-                        (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
-                          found = true;
-                        }
-                      }
-                      if(found === true) {
-                        sendTextMessage(senderID, `${name} is open! :)`);
-                      }
-                      else {
-                        sendTextMessage(senderID, `${name} is closed. :(`);
-                      }
-                    }
-                  }
-                  if(match === false) {
-                    sendTextMessage(senderID, `${name} is closed. :(`);
-                  }
-                }
-              }
-            }
-          }
+        const response = responses.getResponse(messageText, data);
+        if(response != undefined) {
+          printed = true;
+          sendTextMessage(senderID, response);
         }
       })
       .catch(err => {
@@ -168,55 +122,9 @@ function receivedMessage(event) {
           names.push(name);
         }
         for (let j = 0; j < names.length; j++) {
-          const keywords = names[j].toLowerCase().split(/[^a-z0-9]/).filter(e => e);
-          for (let i = 0; i < info.document.venue.length; i++) {
-            const name = info.document.venue[i].name;
-            const hours = info.document.venue[i].dateHours;
-            const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
-            for(let j = 0; j < keywords.length; j++) {
-              const word = keywords[j];
-              for(let k = 0; k < name_words.length; k++) {
-                const name_word = name_words[k];
-                if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
-                  const current_date = new Date(); 
-                  if(hours === undefined) {
-                    sendTextMessage(senderID, `${name} does not have any listed hours.`);
-                  }
-                  else {
-                    let match = false;
-                    for(let l = 0; l < hours.length; l++) {
-                      const date = hours[l].date;
-                      const full_date = date.split("-");
-                      if((current_date.getFullYear()).toString() === full_date[0] && ("0" + (current_date.getMonth() + 1).toString()) === full_date[1] && 
-                      (current_date.getDate()).toString() === full_date[2]) {
-                        console.log(`date match!`);
-                        match = true;
-                        let found = false;
-                        for(let n = 0; n < hours[l].meal.length; n++) {
-                          const openTime = hours[l].meal[n].open;
-                          const openArray = openTime.split(":");
-                          const closeTime = hours[l].meal[n].close;
-                          const closeArray = closeTime.split(":");
-                          if((current_date.getHours() > openArray[0] || (current_date.getHours() === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
-                          (current_date.getHours() < closeArray[0] || (current_date.getHours() === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
-                            found = true;
-                          }
-                        }
-                        if(found === true) {
-                          sendTextMessage(senderID, `${name} is open! :)`);
-                        }
-                        else {
-                          sendTextMessage(senderID, `${name} is closed. :(`);
-                        }
-                      }
-                    }
-                    if(match === false) {
-                      sendTextMessage(senderID, `${name} is closed. :(`);
-                    }
-                  }
-                }
-              }
-            }
+          const response = responses.getResponse(names[j], data);
+          if(response != undefined) {
+            sendTextMessage(senderID, response);
           }
         }
       })

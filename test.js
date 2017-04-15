@@ -1,4 +1,14 @@
 const axios = require('axios');
+const responses = require('./getResponse.js');
+
+axios('https://api.pennlabs.org/dining/venues')
+      .then(({ data }) => {
+        console.log(responses.getResponse("commons", data));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
 const messageText = "frontera";
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
