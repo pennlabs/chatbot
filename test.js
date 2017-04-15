@@ -3,13 +3,13 @@ const responses = require('./getResponse.js');
 
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
-        console.log(responses.getResponse("commons", data));
+        console.log(responses.getResponse("starbucks", data));
       })
       .catch(err => {
         console.log(err);
       });
 
-const messageText = "frontera";
+const messageText = "starbucks";
 axios('https://api.pennlabs.org/dining/venues')
       .then(({ data }) => {
         const info = data;
