@@ -29,7 +29,7 @@ axios('https://api.pennlabs.org/dining/venues')
               const name_word = name_words[k];
               if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
                 console.log(`match for ${name}`);
-                const current_date = new Date(); 
+                const current_date = new Date();
                 if(hours === undefined) {
                   console.log(`${name} does not have any listed hours.`);
                 }
@@ -47,6 +47,7 @@ axios('https://api.pennlabs.org/dining/venues')
                     console.log("current date day: " + (current_date.getDate()).toString());
                     console.log("data day: " + full_date[2]);
                     console.log(`${year} ${month} ${day}`);
+
                     if((current_date.getFullYear()).toString() === full_date[0] && ("0" + (current_date.getMonth() + 1).toString()) === full_date[1] && 
                     (current_date.getDate()).toString() === full_date[2]) {
                       console.log(`date match!`);
@@ -85,4 +86,8 @@ axios('https://api.pennlabs.org/dining/venues')
       })
       .catch(err => {
         console.log(err);
+<<<<<<< HEAD
       });*/
+=======
+      });
+>>>>>>> 87e3beaf05ce0ac3a24588abbf8ae420a2fde978
