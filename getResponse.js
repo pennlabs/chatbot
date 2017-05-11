@@ -1,3 +1,4 @@
+const timezone = require('moment-timezone');
 
 // splitIntoWords takes text and splits it by non-alphanumeric
 // characters (e.g. spaces, tabs, punctuation), into an array
@@ -9,10 +10,9 @@ function splitIntoWords(text) {
 // & closing times, each formatted as `hh:mm`, and returns true
 // if the current time is between those, false otherwise.
 function isWithinOperatingHours(openTime, closeTime) {
-  const currentDate = new Date();
+  const currentDate = timezone().tz("America/New_York");
 
-  // HACK: shifting current hours by 4 to account for time difference
-  const [currentHour, currentMinute] = [currentDate().getHours() - 4, currentDate.getMinutes()];
+  const [currentHour, currentMinute] = [currentDate().hour(), currentDate.minute()];
   const [openHour, openMinute] = openTime.split(':');
   const [closeHour, closeMinute] = closeTime.split(':');
 
@@ -24,14 +24,17 @@ function isWithinOperatingHours(openTime, closeTime) {
 
 function getResponse(messageText, info) {
   const responses = [];
+  // TODO: this is used for the funky date info in the if statement; clean up the logic
   const currentDate = new Date();
+
+  const momentDate = timezone().tz("America/New_York");
 
   // create an array from our message text
   const keywords = splitIntoWords(messageText);
 
   // Iterate through each venue
   for (let i = 0; i < info.document.venue.length; i++) {
-    const { name, dateHours: hours} = info.document.venue[i];
+    const { name, dateHours: hours } = info.document.venue[i];
 
     // create an array from the venue name, filtering out common words
     const venueNameArray = splitIntoWords(name)
@@ -66,7 +69,7 @@ function getResponse(messageText, info) {
         for (let n = 0; n < hours[l].meal.length; n++) {
           const { open: openTime, close: closeTime } = hours[l].meal[n];
           responses.push(openTime, closeTime);
-          responses.push(`${currentDate.getHours() - 4}:${currentDate.getMinutes()}`);
+          responses.push(`${momentDate.hour()}:${momentDate.minute()}`);
           responses.push(isWithinOperatingHours(openTime, closeTime));
 
           if (isWithinOperatingHours(openTime, closeTime)) {
