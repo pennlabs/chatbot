@@ -1,69 +1,91 @@
-const axios = require('axios');
+const timezone = require('moment-timezone');
 
-function getResponse(messageText, data) {
+// splitIntoWords takes text and splits it by non-alphanumeric
+// characters (e.g. spaces, tabs, punctuation), into an array
+function splitIntoWords(text) {
+  return text.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
+}
+
+// isWithinOperatingHours takes two strings representing opening
+// & closing times, each formatted as `hh:mm`, and returns true
+// if the current time is between those, false otherwise.
+function isWithinOperatingHours(openTime, closeTime) {
+  const currentDate = timezone().tz("America/New_York");
+
+  const [currentHour, currentMinute] = [currentDate().hour(), currentDate.minute()];
+  const [openHour, openMinute] = openTime.split(':');
+  const [closeHour, closeMinute] = closeTime.split(':');
+
+  return (
+    (currentHour >= openHour && currentMinute >= openMinute) &&
+    (currentHour <= closeHour && currentMinute <= closeMinute)
+  );
+}
+
+function getResponse(messageText, info) {
   const responses = [];
-  const info = data;
-  const keywords = messageText.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
+  // TODO: this is used for the funky date info in the if statement; clean up the logic
+  const currentDate = new Date();
+
+  const momentDate = timezone().tz("America/New_York");
+
+  // create an array from our message text
+  const keywords = splitIntoWords(messageText);
+
+  // Iterate through each venue
   for (let i = 0; i < info.document.venue.length; i++) {
-    const name = info.document.venue[i].name;
-    const hours = info.document.venue[i].dateHours;
-    const name_words = name.toLowerCase().split(/[^a-z0-9]/).filter(e => e);
-    for(let j = 0; j < keywords.length; j++) {
-      const word = keywords[j];
-      for(let k = 0; k < name_words.length; k++) {
-        const name_word = name_words[k];
-        if(name_word != "dining" && name_word != "at" && name_word != "the" && name_word === word) {
-          const current_date = new Date();
-          if(hours === undefined) {
-            const response = `${name} does not have any listed hours.`;
-            responses.push(response);
-          }
-          else {
-            let match = false;
-            for(let l = 0; l < hours.length; l++) {
-              const date = hours[l].date;
-              const full_date = date.split("-");
-              if((current_date.getFullYear()).toString() === full_date[0] && ("0" + (current_date.getMonth() + 1).toString()) === full_date[1] &&
-                (current_date.getDate()).toString() === full_date[2]) {
-                match = true;
-                let found = false;
-                for(let n = 0; n < hours[l].meal.length; n++) {
-                  const openTime = hours[l].meal[n].open;
-                  responses.push(openTime);
-                  const openArray = openTime.split(":");
-                  const closeTime = hours[l].meal[n].close;
-                  responses.push(closeTime);
-                  const closeArray = closeTime.split(":");
-                  responses.push(current_date.getHours() - 4 + ":" + current_date.getMinutes());
-                  responses.push((current_date.getHours() - 4 > openArray[0] || (current_date.getHours() - 4 === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
-                    (current_date.getHours() - 4 < closeArray[0] || (current_date.getHours() - 4 === closeArray[0] && current_date.getMinutes() <= closeArray[1])));
-                  if((current_date.getHours() - 4 > openArray[0] || (current_date.getHours() - 4 === openArray[0] && current_date.getMinutes() >= openArray[1])) &&
-                    (current_date.getHours() - 4 < closeArray[0] || (current_date.getHours() - 4 === closeArray[0] && current_date.getMinutes() <= closeArray[1]))) {
-                    found = true;
-                  }
-                }
-                if(found === true) {
-                  const response = `${name} is open! :)`;
-                  responses.push(response);
-                }
-                else {
-                  const response = `${name} is closed. :(`;
-                  responses.push(response);
-                }
-              }
-            }
-            if(match === false) {
-              const response = `${name} is closed. :(`;
-              responses.push(response);
-            }
+    const { name, dateHours: hours } = info.document.venue[i];
+
+    // create an array from the venue name, filtering out common words
+    const venueNameArray = splitIntoWords(name)
+    .filter(e => e !== "dining" && e !== "at" && e !== "the");
+
+    // only proceed if one of the searched keywords matches something in the venueNameArray
+    if (!venueNameArray.includes(...keywords)) {
+      continue;
+    }
+    // if the venue does not contain any hours, we cannot check
+    // if it is open, so continue to next loop iteration.
+    if (!hours) {
+      responses.push(`${name} does not have any listed hours.`);
+      continue;
+    }
+
+    let venueIsOpenOnCurrentDate = false;
+    // iterate through the hours
+    for (let l = 0; l < hours.length; l++) {
+
+      // check to see if the venue is open on the current date
+      const fullDate = hours[l].date.split("-");
+      if ((currentDate.getFullYear()).toString() === fullDate[0] && ("0" + (currentDate.getMonth() + 1).toString()) === fullDate[1] &&
+        (currentDate.getDate()).toString() === fullDate[2]) {
+
+        // Once we know that the venue is open on the current date, we have to check
+        // whether the current time is valid
+        venueIsOpenOnCurrentDate = true;
+        let venueIsOpenOnCurrentTime = false;
+
+        // iterate through the meals
+        for (let n = 0; n < hours[l].meal.length; n++) {
+          const { open: openTime, close: closeTime } = hours[l].meal[n];
+          responses.push(openTime, closeTime);
+          responses.push(`${momentDate.hour()}:${momentDate.minute()}`);
+          responses.push(isWithinOperatingHours(openTime, closeTime));
+
+          if (isWithinOperatingHours(openTime, closeTime)) {
+            venueIsOpenOnCurrentTime = true;
           }
         }
+        responses.push(venueIsOpenOnCurrentTime ? `${name} is open! :)` : `${name} is closed. :(`);
       }
+    }
+    if (!venueIsOpenOnCurrentDate) {
+      responses.push(`${name} is closed. :(`);
     }
   }
   return responses;
 }
 
 module.exports = {
-  getResponse: getResponse
+  getResponse
 };
