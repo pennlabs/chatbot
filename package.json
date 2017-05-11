@@ -24,7 +24,8 @@
     "axios": "^0.15.3",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "fuzzyset.js": "0.0.1"
+    "fuzzyset.js": "0.0.1",
+    "moment-timezone": "^0.5.13"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",
